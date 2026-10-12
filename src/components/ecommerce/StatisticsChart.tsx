@@ -3,7 +3,6 @@
 import { CalenderIcon } from "@/icons";
 import { ApexOptions } from "apexcharts";
 import flatpickr from "flatpickr";
-import { useTranslations } from "next-intl";
 import dynamic from "next/dynamic";
 import { useEffect, useRef } from "react";
 import ChartTab from "../common/ChartTab";
@@ -26,8 +25,6 @@ const monthKeys = [
 ] as const;
 
 export default function StatisticsChart() {
-  const t = useTranslations("ecommerce.statistics");
-  const tMonths = useTranslations("ecommerce.months");
   const datePickerRef = useRef<HTMLInputElement>(null);
 
   const options: ApexOptions = {
@@ -88,7 +85,7 @@ export default function StatisticsChart() {
     },
     xaxis: {
       type: "category", // Category-based x-axis
-      categories: monthKeys.map((key) => tMonths(key)),
+      categories: monthKeys.map((key) => key.toUpperCase()), // Use month keys as categories
       axisBorder: {
         show: false, // Hide x-axis border
       },
@@ -117,11 +114,11 @@ export default function StatisticsChart() {
 
   const series = [
     {
-      name: t("sales"),
+      name: "Sales",
       data: [180, 190, 170, 160, 175, 165, 170, 205, 230, 210, 240, 235],
     },
     {
-      name: t("revenue"),
+      name: "Revenue",
       data: [40, 30, 50, 40, 55, 40, 70, 100, 110, 120, 150, 140],
     },
   ];
@@ -158,10 +155,10 @@ export default function StatisticsChart() {
       <div className="mb-6 flex flex-col gap-5 sm:flex-row sm:justify-between">
         <div className="w-full">
           <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-            {t("title")}
+            Sales Statistics
           </h3>
           <p className="mt-1 text-theme-sm text-gray-500 dark:text-gray-400">
-            {t("subtitle")}
+            Overview of your sales performance
           </p>
         </div>
 
@@ -172,7 +169,7 @@ export default function StatisticsChart() {
             <input
               ref={datePickerRef}
               className="h-10 w-10 cursor-pointer rounded-lg border border-gray-200 bg-white text-sm font-medium text-transparent outline-none lg:h-auto lg:w-40 lg:py-2 lg:ps-10 lg:pe-3 lg:text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:lg:text-gray-300"
-              placeholder={t("selectDateRange")}
+              placeholder="Select Date Range"
             />
           </div>
         </div>

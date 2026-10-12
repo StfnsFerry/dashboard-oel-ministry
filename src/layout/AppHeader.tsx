@@ -1,17 +1,16 @@
 "use client";
 
 import { ThemeToggleButton } from "@/components/common/ThemeToggleButton";
-// import NotificationDropdown from "@/components/header/NotificationDropdown";
 import UserDropdown from "@/components/header/UserDropdown";
 import { useSidebar } from "@/context/SidebarContext";
-import { Link } from "@/i18n/navigation";
+import Link from "next/link";
 import { cn } from "@/utils";
-import { useTranslations } from "next-intl";
+
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
 const AppHeader: React.FC = () => {
-  const t = useTranslations("header");
+  
   const inputRef = useRef<HTMLInputElement>(null);
   const [isApplicationMenuOpen, setApplicationMenuOpen] = useState(false);
 
@@ -53,7 +52,7 @@ const AppHeader: React.FC = () => {
               isMobileOpen ? "bg-gray-100 dark:bg-white/3" : ""
             }`}
             onClick={handleToggle}
-            aria-label={t("toggleSidebar")}
+            aria-label={("toggleSidebar")}
           >
             {isMobileOpen ? (
               <svg

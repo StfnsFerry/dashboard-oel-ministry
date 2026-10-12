@@ -1,8 +1,8 @@
 "use client";
 
-import { Link, usePathname } from "@/i18n/navigation";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { cn } from "@/utils";
-import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useSidebar } from "../context/SidebarContext";
@@ -39,8 +39,36 @@ type NavItem = {
 const navItems: NavItem[] = [
   {
     icon: <GridIcon />,
-    key: "dashboard",
-    subItems: [{ key: "ecommerceHome", path: "/" }],
+    key: "Dashboard",
+    subItems: [{ key: "Overview", path: "/" }],
+  },
+  {
+    key: "Data Jemaat",
+    icon: <ListIcon />,
+    subItems: [
+      { key: "OEL Ministry", path: "/oel-ministry", pro: false },
+      { key: "Kaum Pria", path: "/form-elements", pro: false },
+      { key: "Kaum Ibu", path: "/form-elements", pro: false },
+      { key: "Majesty", path: "/form-elements", pro: false },
+      { key: "Eagle", path: "/form-elements", pro: false },
+      { key: "Sekolah Minggu", path: "/form-elements", pro: false },
+      { key: "Kepala Keluarga", path: "/form-elements", pro: false }
+    ],
+  },
+  {
+    key: "Data Sektor",
+    icon: <ListIcon />,
+    subItems: [
+      { key: "Baitani", path: "/form-elements", pro: false },
+      { key: "Berea", path: "/form-elements", pro: false },
+      { key: "Betlehem", path: "/form-elements", pro: false },
+      { key: "Elim", path: "/form-elements", pro: false },
+      { key: "Filadelfia", path: "/form-elements", pro: false },
+      { key: "Kalvari", path: "/form-elements", pro: false },
+      { key: "Mahanaim", path: "/form-elements", pro: false },
+      { key: "Moria", path: "/form-elements", pro: false },
+      { key: "Sion", path: "/form-elements", pro: false }
+    ],
   },
   {
     icon: <CalenderIcon />,
@@ -106,7 +134,6 @@ const othersItems: NavItem[] = [
 const AppSidebar: React.FC = () => {
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
   const pathname = usePathname();
-  const t = useTranslations("sidebar");
 
   const renderMenuItems = (
     navItems: NavItem[],
@@ -138,7 +165,7 @@ const AppSidebar: React.FC = () => {
                 {nav.icon}
               </span>
               {(isExpanded || isHovered || isMobileOpen) && (
-                <span className="menu-item-text">{t(`items.${nav.key}`)}</span>
+                <span className="menu-item-text">{(`${nav.key}`)}</span>
               )}
               {nav.new && (isExpanded || isHovered || isMobileOpen) && (
                 <span
@@ -151,7 +178,7 @@ const AppSidebar: React.FC = () => {
                     "menu-dropdown-badge",
                   )}
                 >
-                  {t("badges.new")}
+                  {("badges.new")}
                 </span>
               )}
               {(isExpanded || isHovered || isMobileOpen) && (
@@ -189,7 +216,7 @@ const AppSidebar: React.FC = () => {
                 </span>
                 {(isExpanded || isHovered || isMobileOpen) && (
                   <span className="menu-item-text">
-                    {t(`items.${nav.key}`)}
+                    {(`${nav.key}`)}
                   </span>
                 )}
               </Link>
@@ -220,7 +247,7 @@ const AppSidebar: React.FC = () => {
                           : "menu-dropdown-item-inactive"
                       }`}
                     >
-                      {t(`items.${subItem.key}`)}
+                      {(`${subItem.key}`)}
                       <span className="ms-auto flex items-center gap-1">
                         {subItem.new && (
                           <span
@@ -230,7 +257,7 @@ const AppSidebar: React.FC = () => {
                                 : "menu-dropdown-badge-inactive"
                             } menu-dropdown-badge`}
                           >
-                            {t("badges.new")}
+                            {("badges.new")}
                           </span>
                         )}
                         {subItem.pro && (
@@ -241,7 +268,7 @@ const AppSidebar: React.FC = () => {
                                 : "menu-dropdown-badge-pro-inactive"
                             } menu-dropdown-badge-pro`}
                           >
-                            {t("badges.pro")}
+                            {("badges.pro")}
                           </span>
                         )}
                       </span>
@@ -395,7 +422,7 @@ const AppSidebar: React.FC = () => {
                 }`}
               >
                 {isExpanded || isHovered || isMobileOpen ? (
-                  t("groups.menu")
+                  ("Home")
                 ) : (
                   <HorizontaLDots />
                 )}
@@ -412,7 +439,7 @@ const AppSidebar: React.FC = () => {
                 }`}
               >
                 {isExpanded || isHovered || isMobileOpen ? (
-                  t("groups.others")
+                  ("Others")
                 ) : (
                   <HorizontaLDots />
                 )}

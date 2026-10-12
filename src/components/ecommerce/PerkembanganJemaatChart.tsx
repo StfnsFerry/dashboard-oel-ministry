@@ -6,7 +6,6 @@ import flatpickr from "flatpickr";
 import dynamic from "next/dynamic";
 import { useEffect, useRef } from "react";
 import ChartTab from "../common/ChartTab";
-import { useTranslations } from "next-intl";
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
@@ -23,7 +22,7 @@ const monthKeys = [
   "oct",
   "nov",
   "dec",
-] as const;
+];
 
 const initialTotalJemaat = 500;
 
@@ -48,7 +47,7 @@ let runningTotal = initialTotalJemaat;
   });
 
 export default function PerkembanganJemaatChart() {
-    const tMonths = useTranslations("ecommerce.months");
+    // const tMonths = useTranslations("ecommerce.months");
   const datePickerRef = useRef<HTMLInputElement>(null);
 
   const options: ApexOptions = {
@@ -109,7 +108,7 @@ export default function PerkembanganJemaatChart() {
     },
     xaxis: {
       type: "category", // Category-based x-axis
-      categories: monthKeys.map((key) => tMonths(key)),
+      categories: monthKeys.map((month) => month.toUpperCase()), // Use month keys as categories
       axisBorder: {
         show: false, // Hide x-axis border
       },

@@ -1,9 +1,7 @@
 import { cn } from "@/utils";
-import { useTranslations } from "next-intl";
 import { useState } from "react";
 
 const ChartTab: React.FC = () => {
-  const t = useTranslations("ecommerce.statistics");
   const [selected, setSelected] = useState<
     "optionOne" | "optionTwo" | "optionThree"
   >("optionOne");
@@ -21,7 +19,7 @@ const ChartTab: React.FC = () => {
           "optionOne",
         )}`}
       >
-        {t("monthly")}
+        Monthly
       </button>
 
       <button
@@ -31,7 +29,7 @@ const ChartTab: React.FC = () => {
           getButtonClass("optionTwo"),
         )}
       >
-        {t("quarterly")}
+        Quarterly
       </button>
 
       <button
@@ -40,7 +38,7 @@ const ChartTab: React.FC = () => {
           "optionThree",
         )}`}
       >
-        {t("annually")}
+        Annually
       </button>
     </div>
   );

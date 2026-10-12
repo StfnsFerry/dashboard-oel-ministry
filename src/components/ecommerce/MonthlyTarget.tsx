@@ -2,7 +2,6 @@
 
 import { MoreDotIcon } from "@/icons";
 import { ApexOptions } from "apexcharts";
-import { useTranslations } from "next-intl";
 import { Dropdown } from "../ui/dropdown/Dropdown";
 import { DropdownItem } from "../ui/dropdown/DropdownItem";
 
@@ -15,8 +14,6 @@ const ReactApexChart = dynamic(() => import("react-apexcharts"), {
 
 export default function MonthlyTarget() {
   const [isOpen, setIsOpen] = useState(false);
-  const t = useTranslations("ecommerce.monthlyTarget");
-  const tCommon = useTranslations("common");
 
   const series = [75.55];
   const options: ApexOptions = {
@@ -81,10 +78,10 @@ export default function MonthlyTarget() {
         <div className="flex justify-between">
           <div>
             <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-              {t("title")}
+              Monthly Target
             </h3>
             <p className="mt-1 text-theme-sm font-normal text-gray-500 dark:text-gray-400">
-              {t("subtitle")}
+              Subtitle
             </p>
           </div>
 
@@ -101,13 +98,13 @@ export default function MonthlyTarget() {
                 onItemClick={closeDropdown}
                 className="flex w-full rounded-lg text-start font-normal text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
               >
-                {tCommon("viewMore")}
+                View More
               </DropdownItem>
               <DropdownItem
                 onItemClick={closeDropdown}
                 className="flex w-full rounded-lg text-start font-normal text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
               >
-                {tCommon("delete")}
+                Delete
               </DropdownItem>
             </Dropdown>
           </div>
@@ -128,14 +125,14 @@ export default function MonthlyTarget() {
           </span>
         </div>
         <p className="mx-auto mt-4.5 w-full max-w-95 text-center text-sm text-gray-500 sm:text-base dark:text-gray-400">
-          {t("earned", { amount: "$3287" })}
+          $1234 Earned
         </p>
       </div>
 
       <div className="flex items-center justify-center gap-5 px-6 py-3 sm:gap-8 sm:py-5">
         <div>
           <p className="mb-1 text-center text-theme-xs text-gray-500 sm:text-sm dark:text-gray-400">
-            {t("target")}
+            Target
           </p>
           <p className="flex items-center justify-center gap-1 text-base font-semibold text-gray-800 sm:text-lg dark:text-white/90">
             $20K
@@ -160,7 +157,7 @@ export default function MonthlyTarget() {
 
         <div>
           <p className="mb-1 text-center text-theme-xs text-gray-500 sm:text-sm dark:text-gray-400">
-            {t("revenue")}
+            Revenue
           </p>
           <p className="flex items-center justify-center gap-1 text-base font-semibold text-gray-800 sm:text-lg dark:text-white/90">
             $20K
@@ -185,7 +182,7 @@ export default function MonthlyTarget() {
 
         <div>
           <p className="mb-1 text-center text-theme-xs text-gray-500 sm:text-sm dark:text-gray-400">
-            {t("today")}
+            Today
           </p>
           <p className="flex items-center justify-center gap-1 text-base font-semibold text-gray-800 sm:text-lg dark:text-white/90">
             $20K

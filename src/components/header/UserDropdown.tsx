@@ -1,49 +1,45 @@
 "use client";
 
 // import { useClickOutside } from "@/hooks/useClickOutside";
-// import { getLanguage, languages } from "@/i18n/languages";
-import { Link } from "@/i18n/navigation";
-// import type { Locale } from "@/i18n/routing";
+
 import { ChevronDownIcon } from "@/icons";
-// import { cn } from "@/utils";
-import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { useState } from "react";
 import { Dropdown } from "../ui/dropdown/Dropdown";
 import { DropdownItem } from "../ui/dropdown/DropdownItem";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
 
 export default function UserDropdown() {
-  const t = useTranslations("userDropdown");
-  // const locale = useLocale() as Locale;
-  // const router = useRouter();
-  // const pathname = usePathname();
+
   const [isOpen, setIsOpen] = useState(false);
-  // const [isSubDropdownOpen, setIsSubDropdownOpen] = useState(false);
-  // const subDropdownRef = useRef<HTMLLIElement>(null);
 
-  // const currentLang = getLanguage(locale);
-  // const CurrentFlagIcon = currentLang.FlagIcon;
-
-  // useClickOutside(subDropdownRef, () => {
-  //   setIsSubDropdownOpen(false);
-  // });
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
-    // if (isOpen) {
-    //   setIsSubDropdownOpen(false);
-    // }
+
   };
 
   const closeDropdown = () => {
     setIsOpen(false);
-    // setIsSubDropdownOpen(false);
+
   };
 
-  // const handleSelectLanguage = (id: Locale) => {
-  //   router.replace(pathname, { locale: id });
-  //   setIsSubDropdownOpen(false);
-  // };
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    const supabase = createClient();
+
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+      console.error("Logout error:", error);
+      return;
+    }
+
+    router.push("/signin");
+    router.refresh();
+  };
 
   return (
     <div className="relative">
@@ -106,7 +102,7 @@ export default function UserDropdown() {
                   fill=""
                 />
               </svg>
-              {t("editProfile")}
+              {("editProfile")}
             </DropdownItem>
           </li>
           {/* <li>
@@ -245,12 +241,13 @@ export default function UserDropdown() {
             )}
           </li> */}
         </ul>
-        <Link
-          href="/signin"
+        <button
+          type="button"
+          onClick={handleLogout}
           className="group mt-3 flex items-center justify-center gap-3 rounded-lg border border-gray-200 px-3 py-2 text-theme-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-700 dark:border-gray-800 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
         >
-          {t("signOut")}
-        </Link>
+          {("signOut")}
+        </button>
       </Dropdown>
     </div>
   );

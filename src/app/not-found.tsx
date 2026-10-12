@@ -1,19 +1,17 @@
 "use client";
 
 import GridShape from "@/components/common/GridShape";
-import { Link } from "@/i18n/navigation";
-import { useTranslations } from "next-intl";
+import Link from "next/link";
 import Image from "next/image";
 
 export default function NotFound() {
-  const t = useTranslations("notFound");
 
   return (
     <div className="relative z-1 flex min-h-screen flex-col items-center justify-center overflow-hidden p-6">
       <GridShape />
       <div className="mx-auto w-full max-w-60.5 text-center sm:max-w-118">
         <h1 className="mb-8 text-title-md font-bold text-gray-800 xl:text-title-2xl dark:text-white/90">
-          {t("error")}
+          ERROR
         </h1>
 
         <Image
@@ -32,14 +30,14 @@ export default function NotFound() {
         />
 
         <p className="mt-10 mb-6 text-base text-gray-700 sm:text-lg dark:text-gray-400">
-          {t("message")}
+          We can’t seem to find the page you are looking for!
         </p>
 
         <Link
           href="/"
           className="inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white px-5 py-3.5 text-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/3 dark:hover:text-gray-200"
         >
-          {t("backHome")}
+          Back to Home Page
         </Link>
       </div>
       {/* <!-- Footer --> */}

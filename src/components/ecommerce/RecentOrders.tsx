@@ -1,4 +1,3 @@
-import { useTranslations } from "next-intl";
 import Image from "next/image";
 import Badge from "../ui/badge/Badge";
 import {
@@ -70,15 +69,15 @@ const tableData: Product[] = [
 ];
 
 export default function RecentOrders() {
-  const t = useTranslations("ecommerce.recentOrders");
-  const tCommon = useTranslations("common");
+  // const t = useTranslations("ecommerce.recentOrders");
+  // const tCommon = useTranslations("common");
 
   return (
     <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white px-4 pt-4 pb-3 sm:px-6 dark:border-gray-800 dark:bg-white/3">
       <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-            {t("title")}
+            Recent Orders
           </h3>
         </div>
 
@@ -119,10 +118,10 @@ export default function RecentOrders() {
                 strokeWidth="1.5"
               />
             </svg>
-            {tCommon("filter")}
+            Filter
           </button>
           <button className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-theme-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/3 dark:hover:text-gray-200">
-            {tCommon("seeAll")}
+            See all
           </button>
         </div>
       </div>
@@ -135,25 +134,25 @@ export default function RecentOrders() {
                 isHeader
                 className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400"
               >
-                {t("products")}
+                Product
               </TableCell>
               <TableCell
                 isHeader
                 className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400"
               >
-                {t("category")}
+                Category
               </TableCell>
               <TableCell
                 isHeader
                 className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400"
               >
-                {t("price")}
+                Price
               </TableCell>
               <TableCell
                 isHeader
                 className="py-3 text-start text-theme-xs font-medium text-gray-500 dark:text-gray-400"
               >
-                {t("status")}
+                Status
               </TableCell>
             </TableRow>
           </TableHeader>
@@ -179,7 +178,7 @@ export default function RecentOrders() {
                         {product.name}
                       </p>
                       <span className="text-theme-xs text-gray-500 dark:text-gray-400">
-                        {t("variants", { count: product.variants })}
+                        Variants: {product.variants}
                       </span>
                     </div>
                   </div>
@@ -188,7 +187,7 @@ export default function RecentOrders() {
                   {product.price}
                 </TableCell>
                 <TableCell className="py-3 text-theme-sm text-gray-500 dark:text-gray-400">
-                  {t(`categories.${product.category}`)}
+                  {product.category.charAt(0).toUpperCase() + product.category.slice(1)}
                 </TableCell>
                 <TableCell className="py-3 text-theme-sm text-gray-500 dark:text-gray-400">
                   <Badge
@@ -201,7 +200,7 @@ export default function RecentOrders() {
                           : "error"
                     }
                   >
-                    {t(`statuses.${product.status}`)}
+                    {product.status.charAt(0).toUpperCase() + product.status.slice(1)}
                   </Badge>
                 </TableCell>
               </TableRow>

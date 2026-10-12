@@ -1,7 +1,6 @@
 "use client";
 
 import { MoreDotIcon } from "@/icons";
-import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { useState } from "react";
 import { Dropdown } from "../ui/dropdown/Dropdown";
@@ -9,8 +8,6 @@ import { DropdownItem } from "../ui/dropdown/DropdownItem";
 import CountryMap from "./CountryMap";
 
 export default function DemographicCard() {
-  const t = useTranslations("ecommerce.demographic");
-  const tCommon = useTranslations("common");
   const [isOpen, setIsOpen] = useState(false);
 
   function toggleDropdown() {
@@ -25,10 +22,10 @@ export default function DemographicCard() {
       <div className="flex justify-between">
         <div>
           <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-            {t("title")}
+            Customers Demographic
           </h3>
           <p className="mt-1 text-theme-sm text-gray-500 dark:text-gray-400">
-            {t("subtitle")}
+            Number of customer based on country
           </p>
         </div>
 
@@ -45,13 +42,13 @@ export default function DemographicCard() {
               onItemClick={closeDropdown}
               className="flex w-full rounded-lg text-left font-normal text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
             >
-              {tCommon("viewMore")}
+              View More
             </DropdownItem>
             <DropdownItem
               onItemClick={closeDropdown}
               className="flex w-full rounded-lg text-left font-normal text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
             >
-              {tCommon("delete")}
+              Delete
             </DropdownItem>
           </Dropdown>
         </div>
@@ -79,10 +76,10 @@ export default function DemographicCard() {
             </div>
             <div>
               <p className="text-theme-sm font-semibold text-gray-800 dark:text-white/90">
-                {t("usa")}
+                USA
               </p>
               <span className="block text-theme-xs text-gray-500 dark:text-gray-400">
-                {t("customers", { count: "2,379" })}
+                2,379 Customers
               </span>
             </div>
           </div>
@@ -110,10 +107,10 @@ export default function DemographicCard() {
             </div>
             <div>
               <p className="text-theme-sm font-semibold text-gray-800 dark:text-white/90">
-                {t("france")}
+                France
               </p>
               <span className="block text-theme-xs text-gray-500 dark:text-gray-400">
-                {t("customers", { count: "589" })}
+                589 Customers
               </span>
             </div>
           </div>
