@@ -40,15 +40,18 @@ const navItems: NavItem[] = [
   {
     icon: <GridIcon />,
     key: "Dashboard",
-    subItems: [{ key: "Overview", path: "/" }],
+    subItems: [
+      { key: "Overview", path: "/" },
+      { key: "Statistik dan Analitik Data", path: "/statistik-analitik-data" }
+    ],
   },
   {
     key: "Data Jemaat",
     icon: <ListIcon />,
     subItems: [
       { key: "OEL Ministry", path: "/oel-ministry", pro: false },
-      { key: "Kaum Pria", path: "/form-elements", pro: false },
-      { key: "Kaum Ibu", path: "/form-elements", pro: false },
+      { key: "Kaum Pria", path: "/kaum-pria", pro: false },
+      { key: "Kaum Ibu", path: "/kaum-ibu", pro: false },
       { key: "Majesty", path: "/form-elements", pro: false },
       { key: "Eagle", path: "/form-elements", pro: false },
       { key: "Sekolah Minggu", path: "/form-elements", pro: false },
@@ -69,6 +72,11 @@ const navItems: NavItem[] = [
       { key: "Moria", path: "/form-elements", pro: false },
       { key: "Sion", path: "/form-elements", pro: false }
     ],
+  },
+  {
+    icon: <UserCircleIcon />,
+    key: "Tambah Jemaat",
+    path: "/tambah-jemaat",
   },
   {
     icon: <CalenderIcon />,

@@ -1,3 +1,4 @@
+
 import { ChevronDownIcon } from "@/icons";
 import { useState } from "react";
 
@@ -12,6 +13,7 @@ interface SelectProps {
   onChange: (value: string) => void;
   className?: string;
   defaultValue?: string;
+  value?: string;
 }
 
 const Select: React.FC<SelectProps> = ({
@@ -20,14 +22,20 @@ const Select: React.FC<SelectProps> = ({
   onChange,
   className = "",
   defaultValue = "",
+  value,
 }) => {
-  // Manage the selected value
-  const [selectedValue, setSelectedValue] = useState<string>(defaultValue);
+  const [internalValue, setInternalValue] = useState(defaultValue);
 
-  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = e.target.value;
-    setSelectedValue(value);
-    onChange(value); // Trigger parent handler
+  const selectedValue = value ?? internalValue;
+
+  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const newValue = event.target.value;
+
+    if (value === undefined) {
+      setInternalValue(newValue);
+    }
+
+    onChange(newValue);
   };
 
   return (
@@ -41,7 +49,6 @@ const Select: React.FC<SelectProps> = ({
         value={selectedValue}
         onChange={handleChange}
       >
-        {/* Placeholder option */}
         <option
           value=""
           disabled
@@ -49,7 +56,7 @@ const Select: React.FC<SelectProps> = ({
         >
           {placeholder}
         </option>
-        {/* Map over options */}
+
         {options.map((option) => (
           <option
             key={option.value}
@@ -60,7 +67,8 @@ const Select: React.FC<SelectProps> = ({
           </option>
         ))}
       </select>
-      <span className="inset-e-3 pointer-events-none absolute top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400">
+
+      <span className="pointer-events-none absolute inset-e-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400">
         <ChevronDownIcon />
       </span>
     </div>
