@@ -18,12 +18,14 @@ type JemaatDetail = {
   golongan_darah: string | null;
   jenis_kelamin: "L" | "P" | null;
   tanggal_bergabung: string | null;
+  nomor_hp: string | null;
   nomor_surat_penyerahan_anak: string | null;
   nomor_surat_baptisan_air: string | null;
   nomor_surat_pernikahan: string | null;
   sektor: { nama_sektor: string } | null;
   kategori: { nama_kategori: string } | null;
   status_jemaat: string;
+  tanggal_kematian: string | null;
 };
 
 function formatTanggal(value: string | null) {
@@ -97,10 +99,12 @@ export default function DetailJemaatPage() {
           golongan_darah,
           jenis_kelamin,
           tanggal_bergabung,
+          nomor_hp,
           nomor_surat_penyerahan_anak,
           nomor_surat_baptisan_air,
           nomor_surat_pernikahan,
           status_jemaat,
+          tanggal_kematian,
           sektor ( nama_sektor ),
           kategori ( nama_kategori )
         `)
@@ -218,10 +222,10 @@ export default function DetailJemaatPage() {
                         />
                         <DetailItem label="Alamat" value={jemaat.alamat} />
                         <DetailItem label="Golongan Darah" value={jemaat.golongan_darah} />
-                        {/* <DetailItem
+                        <DetailItem
                             label="Tanggal Bergabung"
                             value={formatTanggal(jemaat.tanggal_bergabung)}
-                        /> */}
+                        />
                         <DetailItem
                             label="Sektor"
                             value={jemaat.sektor?.nama_sektor}
@@ -229,15 +233,26 @@ export default function DetailJemaatPage() {
                         <DetailItem
                             label="Kategori"
                             value={jemaat.kategori?.nama_kategori}
-                        />   
+                        />
+                         <DetailItem
+                            label="Nomor HP"
+                            value={jemaat.nomor_hp}
+                        />      
+                        {jemaat.status_jemaat === "Meninggal" && (
+                          <DetailItem
+                            label="Tanggal Kematian"
+                            value={formatTanggal(jemaat.tanggal_kematian)}
+                        />
+                        )}
                         <div className=" py-4 dark:border-gray-800">
                           <p className="mb-1 text-sm text-gray-500 dark:text-gray-400">
                             Status Jemaat
                           </p>
-                          <Badge variant="light" startIcon={<PlusIcon />} color={jemaat.status_jemaat === "Aktif" ? "success" : jemaat.status_jemaat === "Nonaktif" ? "error" : "warning"} size="sm">
+                          <Badge variant="light" startIcon={<PlusIcon />} color={jemaat.status_jemaat === "Aktif" ? "success" : jemaat.status_jemaat === "Tidak Aktif" ? "dark" : jemaat.status_jemaat === "Pindah" ? "light" : jemaat.status_jemaat === "Meninggal" ? "error" : "warning"} size="sm">
                             {jemaat.status_jemaat}
                           </Badge>
                         </div> 
+
                     </div>
                 </ComponentCard>
             </div>

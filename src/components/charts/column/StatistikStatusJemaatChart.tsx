@@ -4,7 +4,7 @@
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import type { ApexOptions } from "apexcharts";
-import { createClient } from "@/lib/supabase/client";
+import { getStatistikData } from "@/lib/cache/StatistikCache"
 
 const ReactApexChart = dynamic(() => import("react-apexcharts"), {
   ssr: false,
@@ -15,14 +15,6 @@ interface Props {
   sektor: string;
   tahun: string;
   bulan: string;
-}
-
-interface JemaatData {
-  id: number;
-  status_jemaat: string | null;
-  tanggal_bergabung: string | null;
-  kategori_id: number | null;
-  sektor_id: number | null;
 }
 
 interface KategoriData {
@@ -58,35 +50,23 @@ export default function StatistikStatusJemaatChart({
       setError(null);
 
       try {
-        const supabase = createClient();
+        
+        const {
+          jemaat: jemaatData,
+          kategoris: kategoriData,
+          sektors: sektorData,
+        } = await getStatistikData();
 
-        const [
-          { data: jemaatData, error: jemaatError },
-          { data: kategoriData, error: kategoriError },
-          { data: sektorData, error: sektorError },
-        ] = await Promise.all([
-          supabase
-            .from("jemaat")
-            .select(
-              "id, status_jemaat, tanggal_bergabung, kategori_id, sektor_id",
-            ),
-          supabase.from("kategori").select("id, nama_kategori"),
-          supabase.from("sektor").select("id, nama_sektor"),
-        ]);
+        const jemaat = jemaatData;
+        const kategoriList = kategoriData;
+        const sektorList = sektorData;
 
-        if (jemaatError) throw jemaatError;
-        if (kategoriError) throw kategoriError;
-        if (sektorError) throw sektorError;
 
-        const jemaat = (jemaatData ?? []) as JemaatData[];
-        const kategoris = (kategoriData ?? []) as KategoriData[];
-        const sektors = (sektorData ?? []) as SektorData[];
-
-        const kategoriTerpilih = kategoris.find(
+        const kategoriTerpilih = kategoriList.find(
           (item) => item.nama_kategori === kategori,
         );
 
-        const sektorTerpilih = sektors.find(
+        const sektorTerpilih = sektorList.find(
           (item) => item.nama_sektor === sektor,
         );
 
@@ -131,11 +111,11 @@ export default function StatistikStatusJemaatChart({
 
         const daftarGrup =
           mode === "sektor"
-            ? sektors.filter(
+            ? sektorList.filter(
                 (item) =>
                   sektor === "all" || item.nama_sektor === sektor,
               )
-            : kategoris.filter(
+            : kategoriList.filter(
                 (item) =>
                   kategori === "all" || item.nama_kategori === kategori,
               );
@@ -204,7 +184,7 @@ export default function StatistikStatusJemaatChart({
         borderRadiusApplication: "end",
       },
     },
-    colors: ["#465FFF", "#F04438"],
+    colors: ["#465FFF", "#dd46ff"],
     dataLabels: {
       enabled: true,
       formatter: (value: number) =>
@@ -234,7 +214,7 @@ export default function StatistikStatusJemaatChart({
     legend: {
       position: "top",
       horizontalAlign: "left",
-      markers: { size: 6 },
+      markers: { size: 6, strokeWidth: 0, shape: "circle" },
     },
     grid: {
       borderColor: "#E4E7EC",
@@ -305,15 +285,15 @@ export default function StatistikStatusJemaatChart({
       </div>
 
       {loading ? (
-        <div className="flex h-[320px] items-center justify-center text-sm text-gray-500">
+        <div className="flex h-[350px] items-center justify-center text-sm text-gray-500">
           Memuat statistik...
         </div>
       ) : error ? (
-        <div className="flex h-[320px] items-center justify-center text-sm text-red-500">
+        <div className="flex h-[350px] items-center justify-center text-sm text-red-500">
           {error}
         </div>
       ) : labels.length === 0 ? (
-        <div className="flex h-[320px] items-center justify-center text-sm text-gray-500">
+        <div className="flex h-[350px] items-center justify-center text-sm text-gray-500">
           Tidak ada data untuk filter yang dipilih.
         </div>
       ) : (
@@ -323,7 +303,7 @@ export default function StatistikStatusJemaatChart({
               options={options}
               series={series}
               type="bar"
-              height={365}
+              height={350}
             />
           </div>
         </>

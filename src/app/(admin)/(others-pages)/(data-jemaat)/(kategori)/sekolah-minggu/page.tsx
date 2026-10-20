@@ -5,16 +5,16 @@ import { Metadata } from "next";
 import React from "react";
 
 export const metadata: Metadata = {
-  title: "OEL Ministry | Dashboard JKI Ora et Labora",
+  title: "Sekolah Minggu | Dashboard JKI Ora et Labora",
 };
 
-export default function OelMinistry() {
+export default function KaumPria() {
   return (
     <div>
-      <PageBreadcrumb pageTitle="OEL Ministry" />
+      <PageBreadcrumb pageTitle="Sekolah Minggu" />
       <div className="space-y-6">
-        <ComponentCardTable title="Data Seluruh Jemaat">
-          <JemaatTable />
+        <ComponentCardTable title="Data Seluruh Jemaat Sekolah Minggu">
+          <JemaatTable kategori="Sekolah Minggu" />
         </ComponentCardTable>
       </div>
     </div>

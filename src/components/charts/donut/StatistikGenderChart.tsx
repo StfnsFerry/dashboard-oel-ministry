@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import type { ApexOptions } from "apexcharts";
 import dynamic from "next/dynamic";
-import { createClient } from "@/lib/supabase/client";
+import { getStatistikData } from "@/lib/cache/StatistikCache"
 
 const Chart = dynamic(() => import("react-apexcharts"), {
   ssr: false,
@@ -14,24 +14,6 @@ interface StatistikGenderChartProps {
   sektor: string;
   tahun: string;
   bulan: string;
-}
-
-interface JemaatGender {
-  id: number;
-  jenis_kelamin: string | null;
-  tanggal_bergabung: string | null;
-  kategori_id: number | null;
-  sektor_id: number | null;
-}
-
-interface Kategori {
-  id: number;
-  nama_kategori: string;
-}
-
-interface Sektor {
-  id: number;
-  nama_sektor: string;
 }
 
 export default function StatistikGenderChart({
@@ -53,29 +35,16 @@ export default function StatistikGenderChart({
       setError(null);
 
       try {
-        const supabase = createClient();
+        
+        const {
+          jemaat: jemaatData,
+          kategoris: kategoriData,
+          sektors: sektorData,
+        } = await getStatistikData();
 
-        const [
-          { data: jemaatData, error: jemaatError },
-          { data: kategoriData, error: kategoriError },
-          { data: sektorData, error: sektorError },
-        ] = await Promise.all([
-          supabase
-            .from("jemaat")
-            .select(
-              "id, jenis_kelamin, tanggal_bergabung, kategori_id, sektor_id",
-            ),
-          supabase.from("kategori").select("id, nama_kategori"),
-          supabase.from("sektor").select("id, nama_sektor"),
-        ]);
-
-        if (jemaatError) throw jemaatError;
-        if (kategoriError) throw kategoriError;
-        if (sektorError) throw sektorError;
-
-        const jemaat = (jemaatData ?? []) as JemaatGender[];
-        const kategoriList = (kategoriData ?? []) as Kategori[];
-        const sektorList = (sektorData ?? []) as Sektor[];
+        const jemaat = jemaatData;
+        const kategoriList = kategoriData;
+        const sektorList = sektorData;
 
         const kategoriTerpilih =
           kategori === "all"
@@ -180,7 +149,7 @@ export default function StatistikGenderChart({
       type: "donut",
       height: 365,
     },
-    colors: ["#465FFF", "#9CB9FF"],
+    colors: ["#465FFF", "#dd46ff"],
     labels: ["Laki-laki", "Perempuan"],
     legend: {
       show: true,

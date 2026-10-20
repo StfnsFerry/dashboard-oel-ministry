@@ -4,7 +4,7 @@
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import type { ApexOptions } from "apexcharts";
-import { createClient } from "@/lib/supabase/client";
+import { getStatistikData } from "@/lib/cache/StatistikCache"
 
 const ReactApexChart = dynamic(() => import("react-apexcharts"), {
   ssr: false,
@@ -15,26 +15,6 @@ interface Props {
   sektor: string;
   tahun: string;
   bulan: string;
-}
-
-interface JemaatData {
-  id: number;
-  tanggal_lahir: string | null;
-  tanggal_bergabung: string | null;
-  jenis_kelamin: string | null;
-  status_jemaat: string | null;
-  kategori_id: number | null;
-  sektor_id: number | null;
-}
-
-interface KategoriData {
-  id: number;
-  nama_kategori: string;
-}
-
-interface SektorData {
-  id: number;
-  nama_sektor: string;
 }
 
 const RENTANG_USIA = [
@@ -106,35 +86,23 @@ export default function StatistikUsiaGenderChart({
       setError(null);
 
       try {
-        const supabase = createClient();
+        
+        const {
+          jemaat: jemaatData,
+          kategoris: kategoriData,
+          sektors: sektorData,
+        } = await getStatistikData();
 
-        const [
-          { data: jemaatData, error: jemaatError },
-          { data: kategoriData, error: kategoriError },
-          { data: sektorData, error: sektorError },
-        ] = await Promise.all([
-          supabase
-            .from("jemaat")
-            .select(
-              "id, tanggal_lahir, tanggal_bergabung, jenis_kelamin, status_jemaat, kategori_id, sektor_id",
-            ),
-          supabase.from("kategori").select("id, nama_kategori"),
-          supabase.from("sektor").select("id, nama_sektor"),
-        ]);
+        const jemaat = jemaatData;
+        const kategoriList = kategoriData;
+        const sektorList = sektorData;
 
-        if (jemaatError) throw jemaatError;
-        if (kategoriError) throw kategoriError;
-        if (sektorError) throw sektorError;
 
-        const jemaat = (jemaatData ?? []) as JemaatData[];
-        const kategoris = (kategoriData ?? []) as KategoriData[];
-        const sektors = (sektorData ?? []) as SektorData[];
-
-        const kategoriTerpilih = kategoris.find(
+        const kategoriTerpilih = kategoriList.find(
           (item) => item.nama_kategori === kategori,
         );
 
-        const sektorTerpilih = sektors.find(
+        const sektorTerpilih = sektorList.find(
           (item) => item.nama_sektor === sektor,
         );
 
@@ -272,7 +240,7 @@ export default function StatistikUsiaGenderChart({
         borderRadiusApplication: "end",
       },
     },
-    colors: ["#465FFF", "#F04438"],
+    colors: ["#465FFF", "#dd46ff"],
     dataLabels: {
       enabled: true,
       formatter: (value: number) =>
@@ -301,6 +269,9 @@ export default function StatistikUsiaGenderChart({
     legend: {
       position: "top",
       horizontalAlign: "left",
+      markers: {
+        strokeWidth: 0, shape: "circle", size: 6
+      },
     },
     grid: {
       borderColor: "#E4E7EC",
@@ -340,15 +311,15 @@ export default function StatistikUsiaGenderChart({
       </div>
 
       {loading ? (
-        <div className="flex h-[320px] items-center justify-center text-sm text-gray-500">
+        <div className="flex h-[350px] items-center justify-center text-sm text-gray-500">
           Memuat statistik...
         </div>
       ) : error ? (
-        <div className="flex h-[320px] items-center justify-center text-sm text-red-500">
+        <div className="flex h-[350px] items-center justify-center text-sm text-red-500">
           {error}
         </div>
       ) : totalDihitung === 0 ? (
-        <div className="flex h-[320px] items-center justify-center text-sm text-gray-500">
+        <div className="flex h-[350px] items-center justify-center text-sm text-gray-500">
           Tidak ada data usia dan gender yang valid untuk filter ini.
         </div>
       ) : (
@@ -357,7 +328,7 @@ export default function StatistikUsiaGenderChart({
             options={options}
             series={series}
             type="bar"
-            height={365}
+            height={350}
           />        
         </>
       )}

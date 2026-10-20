@@ -7,6 +7,7 @@ import Button from "../ui/button/Button";
 interface ComponentCardProps {
   title: string;
   children: React.ReactNode;
+  subject?: string;
   className?: string; // Additional custom classes for styling
   desc?: string; // Description text
 }
@@ -16,6 +17,7 @@ const ComponentCard: React.FC<ComponentCardProps> = ({
   children,
   className = "",
   desc = "",
+  subject ="",
 }) => {
 
   const router = useRouter();
@@ -39,10 +41,16 @@ const ComponentCard: React.FC<ComponentCardProps> = ({
             </p>
           )}
         </div>
-
-        <Button onClick={() => router.push("/tambah-jemaat")}>
-          + Tambah Jemaat
-        </Button>
+        
+        {subject ? (
+          <Button onClick={() => router.push("/tambah-keluarga")}>
+            + Tambah Keluarga
+          </Button>
+        ) : (
+          <Button onClick={() => router.push("/tambah-jemaat")}>
+            + Tambah Jemaat
+          </Button>
+        )}
       </div>
 
       {/* Card Body */}

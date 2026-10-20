@@ -25,6 +25,9 @@ import Alert from "@/components/ui/alert/Alert";
 import Input from "../form/input/InputField";
 import Select from "@/components/form/Select";
 
+import { invalidateStatistikCache } from "@/lib/cache/StatistikCache";
+import Badge from "../ui/badge/Badge";
+
 type Jemaat = {
   id: number;
   nama_lengkap: string;
@@ -68,9 +71,10 @@ const selectFilter: FilterFn<typeof features, Jemaat> = (
 interface SelectProps {
   kategori?: string;
   sektor?: string;
+  status?: string;
 }
 
-const JemaatTable: React.FC<SelectProps> = ({ kategori ="", sektor="" }) => {
+const JemaatTable: React.FC<SelectProps> = ({ kategori ="", sektor="", status="" }) => {
 
   const [data, setData] = useState<Jemaat[]>([]);
   const [loading, setLoading] = useState(true);
@@ -139,7 +143,15 @@ const JemaatTable: React.FC<SelectProps> = ({ kategori ="", sektor="" }) => {
             nama_kategori
           )
         `)
-        .eq("status_jemaat", "Aktif");
+
+      if(!status){
+        jemaatQuery = jemaatQuery.eq("status_jemaat", "Aktif");
+      }
+
+      if(status){
+        jemaatQuery = jemaatQuery.neq("status_jemaat", "Aktif");
+      }
+        // .eq("status_jemaat", "Aktif");
 
       if (kategori) {
         jemaatQuery = jemaatQuery.eq(
@@ -236,7 +248,7 @@ const JemaatTable: React.FC<SelectProps> = ({ kategori ="", sektor="" }) => {
     }
 
     fetchData();
-  }, [kategori, sektor]);
+  }, [kategori, sektor, status]);
 
   async function handleSoftDelete() {
     if (!selectedJemaat || deleteLoading) return;
@@ -263,7 +275,7 @@ const JemaatTable: React.FC<SelectProps> = ({ kategori ="", sektor="" }) => {
           ? "Gagal menonaktifkan jemaat. Periksa koneksi atau izin akses."
           : "Status jemaat tidak berubah. Data mungkin sudah tidak aktif atau tidak dapat diakses.",
       });
-
+      
       setDeleteLoading(false);
       return;
     }
@@ -276,7 +288,8 @@ const JemaatTable: React.FC<SelectProps> = ({ kategori ="", sektor="" }) => {
       type: "success",
       text: `${selectedJemaat.nama_lengkap} berhasil dinonaktifkan.`,
     });
-
+    
+    invalidateStatistikCache();
     setSelectedJemaat(null);
     setDeleteLoading(false);
   }
@@ -317,6 +330,7 @@ const JemaatTable: React.FC<SelectProps> = ({ kategori ="", sektor="" }) => {
         return new Date(tanggal).toLocaleDateString("id-ID");
       },
     },
+    
     {
       id: "sektor",
       accessorFn: (row) => row.sektor?.nama_sektor ?? "",
@@ -329,6 +343,31 @@ const JemaatTable: React.FC<SelectProps> = ({ kategori ="", sektor="" }) => {
       header: "Kategori",
       filterFn: selectFilter,
     },
+    ...(status
+    ? [
+        {
+          accessorKey: "status_jemaat",
+          header: "Status",
+          cell: (info) => {
+          const statusJemaat = info.row.original.status_jemaat;
+
+          const statusClass =
+            statusJemaat === "Pindah"
+              ? <Badge variant="light" color="light" size="sm">{statusJemaat}</Badge>
+              : statusJemaat === "Tidak Aktif"
+                ? <Badge variant="light" color="dark" size="sm">{statusJemaat}</Badge>
+                : statusJemaat === "Meninggal"
+                  ? <Badge variant="light" color="error" size="sm">{statusJemaat}</Badge>
+                  : <Badge variant="light" color="primary" size="sm">{statusJemaat}</Badge>
+          return (
+            <div>
+              {statusClass}
+            </div>
+          );
+        },
+        },
+      ]
+    : []),
     {
       id: "aksi",
       header: "Aksi",

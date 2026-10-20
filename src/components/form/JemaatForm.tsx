@@ -12,6 +12,7 @@ import Alert from "@/components/ui/alert/Alert";
 import Button from "@/components/ui/button/Button";
 import ComponentCard from "@/components/common/ComponentCard";
 import { createClient } from "@/lib/supabase/client";
+import { invalidateStatistikCache } from "@/lib/cache/StatistikCache";
 
 type Sektor = {
   id: number;
@@ -31,9 +32,12 @@ type FormData = {
   golongan_darah: string;
   jenis_kelamin: string;
   tanggal_bergabung: string;
+  nomor_hp: string;
   nomor_surat_penyerahan_anak: string;
   nomor_surat_baptisan_air: string;
   nomor_surat_pernikahan: string;
+  status_jemaat: string;
+  tanggal_kematian: string;
   sektor_id: string;
   kategori_id: string;
 };
@@ -50,9 +54,12 @@ const initialFormData: FormData = {
   golongan_darah: "",
   jenis_kelamin: "",
   tanggal_bergabung: "",
+  nomor_hp: "",
   nomor_surat_penyerahan_anak: "",
   nomor_surat_baptisan_air: "",
   nomor_surat_pernikahan: "",
+  status_jemaat: "",
+  tanggal_kematian: "",
   sektor_id: "",
   kategori_id: "",
 };
@@ -68,6 +75,13 @@ const GolonganDarahOptions = [
   { value: "AB", label: "AB" },
   { value: "O", label: "O" },
 ];
+
+const StatusJemaatOptions = [
+  { value: "Aktif", label: "Aktif" },
+  { value: "Tidak Aktif", label: "Tidak Aktif" },
+  { value: "Meninggal", label: "Meninggal" },
+  { value: "Pindah", label: "Pindah" },
+]
 
 export default function JemaatForm({ jemaatId }: JemaatFormProps) {
   const router = useRouter();
@@ -130,9 +144,12 @@ export default function JemaatForm({ jemaatId }: JemaatFormProps) {
             golongan_darah,
             jenis_kelamin,
             tanggal_bergabung,
+            nomor_hp,
             nomor_surat_penyerahan_anak,
             nomor_surat_baptisan_air,
             nomor_surat_pernikahan,
+            status_jemaat,
+            tanggal_kematian,
             sektor_id,
             kategori_id
           `)
@@ -161,17 +178,19 @@ export default function JemaatForm({ jemaatId }: JemaatFormProps) {
           golongan_darah: data.golongan_darah ?? "",
           jenis_kelamin: data.jenis_kelamin ?? "",
           tanggal_bergabung: data.tanggal_bergabung ?? "",
+          nomor_hp: data.nomor_hp ?? "",
           nomor_surat_penyerahan_anak:
             data.nomor_surat_penyerahan_anak ?? "",
           nomor_surat_baptisan_air: data.nomor_surat_baptisan_air ?? "",
           nomor_surat_pernikahan: data.nomor_surat_pernikahan ?? "",
+          status_jemaat: data.status_jemaat ?? "",
+          tanggal_kematian: data.tanggal_kematian ?? "",
           sektor_id:
             data.sektor_id != null ? String(data.sektor_id) : "",
           kategori_id:
             data.kategori_id != null ? String(data.kategori_id) : "",
         });
       }
-
       setLoadingData(false);
     }
 
@@ -235,12 +254,15 @@ export default function JemaatForm({ jemaatId }: JemaatFormProps) {
       golongan_darah: formData.golongan_darah || null,
       jenis_kelamin: formData.jenis_kelamin || null,
       tanggal_bergabung: formData.tanggal_bergabung || null,
+      nomor_hp: formData.nomor_hp || null,
       nomor_surat_penyerahan_anak:
         formData.nomor_surat_penyerahan_anak.trim() || null,
       nomor_surat_baptisan_air:
         formData.nomor_surat_baptisan_air.trim() || null,
       nomor_surat_pernikahan:
         formData.nomor_surat_pernikahan.trim() || null,
+      status_jemaat: formData.status_jemaat || null,
+      tanggal_kematian: formData.tanggal_kematian || null,
       sektor_id: Number(formData.sektor_id),
       kategori_id: Number(formData.kategori_id),
     };
@@ -256,7 +278,6 @@ export default function JemaatForm({ jemaatId }: JemaatFormProps) {
           .from("jemaat")
           .insert({
             ...payload,
-            status_jemaat: "Aktif",
           })
           .select("id")
           .single();
@@ -269,7 +290,8 @@ export default function JemaatForm({ jemaatId }: JemaatFormProps) {
       setLoading(false);
       return;
     }
-
+    invalidateStatistikCache();
+    
     if (!result.data) {
       setError(
         "Data tidak berhasil diperbarui. Periksa ID jemaat dan kebijakan akses Supabase.",
@@ -287,7 +309,7 @@ export default function JemaatForm({ jemaatId }: JemaatFormProps) {
     if (!isEdit) {
       setFormData(initialFormData);
     }
-
+    
     setLoading(false);
 
     window.setTimeout(() => {
@@ -432,7 +454,31 @@ export default function JemaatForm({ jemaatId }: JemaatFormProps) {
                   className="dark:bg-dark-900"
                 />
               </div>
+                 
+              <DatePicker
+                key={`tanggal-bergabung-${loadingData ? "loading" : "loaded"}`}
+                id="tanggal-bergabung"
+                label="Tanggal Bergabung"
+                placeholder="Pilih tanggal bergabung"
+                defaultDate={formData.tanggal_bergabung || undefined}
+                onChange={(_dates, currentDateString) => {
+                  handleFieldChange(
+                    "tanggal_bergabung",
+                    currentDateString,
+                  );
+                }}
+              />
 
+              <div>
+                <Label>Nomor HP</Label>
+                <Input
+                  name="nomor_hp"
+                  value={formData.nomor_hp}
+                  onChange={handleChange}
+                  placeholder="Masukkan Nomor HP"
+                />
+              </div>
+              
               <div className="md:col-span-2">
                 <Label>Alamat</Label>
                 <textarea
@@ -481,25 +527,60 @@ export default function JemaatForm({ jemaatId }: JemaatFormProps) {
                 />
               </div>
             </div>
-
-            <div className="mt-8 flex justify-end gap-3 border-t border-gray-200 pt-5 dark:border-gray-800">
-              <Button
-                variant="outline"
-                onClick={() => router.back()}
-                disabled={loading}
-              >
-                Batal
-              </Button>
-
-              <Button disabled={loading || loadingData}>
-                {loading
-                  ? "Menyimpan..."
-                  : isEdit
-                    ? "Simpan Perubahan"
-                    : "Simpan Jemaat"}
-              </Button>
-            </div>
           </ComponentCard>
+          <div className="space-y-6">
+            <ComponentCard title="Status Jemaat">
+              <div className="space-y-5">
+                <div>
+                  <Label>Status</Label>
+                  <Select
+                    options={StatusJemaatOptions}
+                    placeholder="Pilih Status jemaat"
+                    value={formData.status_jemaat}
+                    onChange={(value) =>
+                      handleFieldChange("status_jemaat", value)
+                    }
+                    className="dark:bg-dark-900"
+                  />
+                </div>
+              </div>
+              {formData.status_jemaat === "Meninggal Dunia" && (
+              <div className="space-y-6">
+                <DatePicker
+                  key={`tanggal-kematian-${loadingData ? "loading" : "loaded"}`}
+                  id="tanggal-kematian"
+                  label="Tanggal kematian"
+                  placeholder="Pilih tanggal kematian"
+                  defaultDate={formData.tanggal_kematian || undefined}
+                  onChange={(_dates, currentDateString) => {
+                    handleFieldChange(
+                      "tanggal_kematian",
+                      currentDateString,
+                    );
+                  }}
+                />
+              </div>
+              )}
+              <div className="mt-15 flex justify-end gap-3 border-t border-gray-200 pt-5 dark:border-gray-800">
+                <Button
+                  variant="outline"
+                  onClick={() => router.back()}
+                  disabled={loading}
+                >
+                  Batal
+                </Button>
+
+                <Button disabled={loading || loadingData}>
+                  {loading
+                    ? "Menyimpan..."
+                    : isEdit
+                      ? "Simpan Perubahan"
+                      : "Simpan Jemaat"}
+                </Button>
+              </div>
+            </ComponentCard>
+          </div>
+
         </div>
       </div>
     </form>

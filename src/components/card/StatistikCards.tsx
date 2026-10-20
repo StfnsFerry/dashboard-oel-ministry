@@ -2,8 +2,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { createClient } from "@/lib/supabase/client";
-
+import { getStatistikData } from "@/lib/cache/StatistikCache"
 interface JemaatRow {
   id: number;
   tanggal_bergabung: string | null;
@@ -104,29 +103,16 @@ export default function StatistikCards({
       setErrorMessage("");
 
       try {
-        const supabase = createClient();
+        
+        const {
+          jemaat: jemaatData,
+          kategoris: kategoriData,
+          sektors: sektorData,
+        } = await getStatistikData();
 
-        const [
-          { data: jemaatData, error: jemaatError },
-          { data: kategoriData, error: kategoriError },
-          { data: sektorData, error: sektorError },
-        ] = await Promise.all([
-          supabase
-            .from("jemaat")
-            .select(
-              "id, tanggal_bergabung, status_jemaat, kategori_id, sektor_id",
-            ),
-          supabase.from("kategori").select("id, nama_kategori"),
-          supabase.from("sektor").select("id, nama_sektor"),
-        ]);
-
-        if (jemaatError) throw jemaatError;
-        if (kategoriError) throw kategoriError;
-        if (sektorError) throw sektorError;
-
-        const jemaatRows = (jemaatData ?? []) as JemaatRow[];
-        const kategoriRows = (kategoriData ?? []) as LookupRow[];
-        const sektorRows = (sektorData ?? []) as LookupRow[];
+        const jemaatRows = jemaatData as JemaatRow[];
+        const kategoriRows = kategoriData as LookupRow[];
+        const sektorRows = sektorData as LookupRow[];
 
         const kategoriTerpilih =
           kategori === "all"

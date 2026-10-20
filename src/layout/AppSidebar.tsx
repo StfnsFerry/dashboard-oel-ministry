@@ -7,19 +7,20 @@ import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useSidebar } from "../context/SidebarContext";
 import {
-  BoxCubeIcon,
-  CalenderIcon,
+  // BoxCubeIcon,
+  // CalenderIcon,
   ChevronDownIcon,
   GridIcon,
   HorizontaLDots,
   ListIcon,
-  PageIcon,
-  PieChartIcon,
-  PlugInIcon,
-  TableIcon,
+  // PageIcon,
+  // PieChartIcon,
+  // PlugInIcon,
+  // TableIcon,
   UserCircleIcon,
 } from "../icons/index";
 // import SidebarWidget from "./SidebarWidget";
+
 
 type NavItem = {
   key: string;
@@ -35,6 +36,22 @@ type NavItem = {
     target?: string;
   }[];
 };
+
+const UserPlusIIcon = () => (
+  <svg
+    width="23"
+    height="23"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.7"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <circle cx="9" cy="7" r="4" />
+    <path d="M3 21v-2a6 6 0 0 1 12 0v2M19 8v6m-3-3h6" />
+  </svg>
+);
 
 const navItems: NavItem[] = [
   {
@@ -52,91 +69,97 @@ const navItems: NavItem[] = [
       { key: "OEL Ministry", path: "/oel-ministry", pro: false },
       { key: "Kaum Pria", path: "/kaum-pria", pro: false },
       { key: "Kaum Ibu", path: "/kaum-ibu", pro: false },
-      { key: "Majesty", path: "/form-elements", pro: false },
-      { key: "Eagle", path: "/form-elements", pro: false },
-      { key: "Sekolah Minggu", path: "/form-elements", pro: false },
-      { key: "Kepala Keluarga", path: "/form-elements", pro: false }
+      { key: "Majesty", path: "/majesty", pro: false },
+      { key: "Eagle", path: "/eagle", pro: false },
+      { key: "Sekolah Minggu", path: "/sekolah-minggu", pro: false },
+      { key: "Keluarga", path: "/keluarga", pro: false }
     ],
   },
   {
     key: "Data Sektor",
     icon: <ListIcon />,
     subItems: [
-      { key: "Baitani", path: "/form-elements", pro: false },
-      { key: "Berea", path: "/form-elements", pro: false },
-      { key: "Betlehem", path: "/form-elements", pro: false },
-      { key: "Elim", path: "/form-elements", pro: false },
-      { key: "Filadelfia", path: "/form-elements", pro: false },
-      { key: "Kalvari", path: "/form-elements", pro: false },
-      { key: "Mahanaim", path: "/form-elements", pro: false },
-      { key: "Moria", path: "/form-elements", pro: false },
-      { key: "Sion", path: "/form-elements", pro: false }
+      { key: "Baitani", path: "/baitani", pro: false },
+      { key: "Berea", path: "/berea", pro: false },
+      { key: "Betlehem", path: "/betlehem", pro: false },
+      { key: "Elim", path: "/elim", pro: false },
+      { key: "Filadelfia", path: "/filadelfia", pro: false },
+      { key: "Kalvari", path: "/kalvari", pro: false },
+      { key: "Mahanaim", path: "/mahanaim", pro: false },
+      { key: "Moria", path: "/moria", pro: false },
+      { key: "Sion", path: "/sion", pro: false }
     ],
   },
   {
-    icon: <UserCircleIcon />,
+    icon: <UserPlusIIcon />,
     key: "Tambah Jemaat",
     path: "/tambah-jemaat",
   },
-  {
-    icon: <CalenderIcon />,
-    key: "calendar",
-    path: "/calendar",
+{
+    icon: <UserPlusIIcon />,
+    key: "Tambah Keluarga",
+    path: "/tambah-keluarga",
   },
-  {
-    icon: <UserCircleIcon />,
-    key: "userProfile",
-    path: "/profile",
-  },
-  {
-    key: "forms",
-    icon: <ListIcon />,
-    subItems: [{ key: "formElements", path: "/form-elements", pro: false }],
-  },
-  {
-    key: "tables",
-    icon: <TableIcon />,
-    subItems: [{ key: "basicTables", path: "/basic-tables", pro: false }],
-  },
-  {
-    key: "pages",
-    icon: <PageIcon />,
-    subItems: [
-      { key: "blankPage", path: "/blank" },
-      { key: "error404", path: "/error-404" },
-    ],
-  },
+  // {
+  //   icon: <CalenderIcon />,
+  //   key: "calendar",
+  //   path: "/calendar",
+  // },
+ 
+  // {
+  //   key: "forms",
+  //   icon: <ListIcon />,
+  //   subItems: [{ key: "formElements", path: "/form-elements", pro: false }],
+  // },
+  // {
+  //   key: "tables",
+  //   icon: <TableIcon />,
+  //   subItems: [{ key: "basicTables", path: "/basic-tables", pro: false }],
+  // },
+  // {
+  //   key: "pages",
+  //   icon: <PageIcon />,
+  //   subItems: [
+  //     { key: "blankPage", path: "/blank" },
+  //     { key: "error404", path: "/error-404" },
+  //   ],
+  // },
 ];
 
 const othersItems: NavItem[] = [
-  {
-    icon: <PieChartIcon />,
-    key: "charts",
-    subItems: [
-      { key: "lineChart", path: "/line-chart", pro: false },
-      { key: "barChart", path: "/bar-chart", pro: false },
-    ],
+   {
+    icon: <UserCircleIcon />,
+    key: "Profil Admin",
+    path: "/profile",
   },
-  {
-    icon: <BoxCubeIcon />,
-    key: "uiElements",
-    subItems: [
-      { key: "alerts", path: "/alerts" },
-      { key: "avatar", path: "/avatars" },
-      { key: "badge", path: "/badge" },
-      { key: "buttons", path: "/buttons" },
-      { key: "images", path: "/images" },
-      { key: "videos", path: "/videos" },
-    ],
-  },
-  {
-    icon: <PlugInIcon />,
-    key: "authentication",
-    subItems: [
-      { key: "signIn", path: "/signin", pro: false },
-      { key: "signUp", path: "/signup", pro: false },
-    ],
-  },
+  // {
+  //   icon: <PieChartIcon />,
+  //   key: "charts",
+  //   subItems: [
+  //     { key: "lineChart", path: "/line-chart", pro: false },
+  //     { key: "barChart", path: "/bar-chart", pro: false },
+  //   ],
+  // },
+  // {
+  //   icon: <BoxCubeIcon />,
+  //   key: "uiElements",
+  //   subItems: [
+  //     { key: "alerts", path: "/alerts" },
+  //     { key: "avatar", path: "/avatars" },
+  //     { key: "badge", path: "/badge" },
+  //     { key: "buttons", path: "/buttons" },
+  //     { key: "images", path: "/images" },
+  //     { key: "videos", path: "/videos" },
+  //   ],
+  // },
+  // {
+  //   icon: <PlugInIcon />,
+  //   key: "authentication",
+  //   subItems: [
+  //     { key: "signIn", path: "/signin", pro: false },
+  //     { key: "signUp", path: "/signup", pro: false },
+  //   ],
+  // },
 ];
 
 const AppSidebar: React.FC = () => {

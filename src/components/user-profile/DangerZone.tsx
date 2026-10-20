@@ -1,4 +1,26 @@
+"use client"
+import { createClient } from "@/lib/supabase/client";
+import { useRouter } from "next/navigation";
+
 export default function DangerZone() {
+
+   const router = useRouter();
+  
+    const handleLogout = async () => {
+      const supabase = createClient();
+  
+      const { error } = await supabase.auth.signOut();
+  
+      if (error) {
+        console.error("Logout error:", error);
+        return;
+      }
+  
+      router.push("/signin");
+      router.refresh();
+    };
+    
+
   return (
     <div className="mb-6 rounded-2xl border border-gray-200 bg-white p-5 lg:p-6 dark:border-gray-800 dark:bg-white/3">
       <h4 className="mb-4 text-lg font-semibold text-gray-800 lg:mb-6 dark:text-white/90">
@@ -15,7 +37,7 @@ export default function DangerZone() {
             </p>
           </div>
           <div>
-            <button className="flex h-10 items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white py-2.5 pe-4 ps-3.5 text-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/3 dark:hover:text-gray-200">
+            <button onClick={handleLogout} className="flex h-10 items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white py-2.5 pe-4 ps-3.5 text-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/3 dark:hover:text-gray-200">
               <svg
                 className="rtl:-scale-x-100"
                 xmlns="http://www.w3.org/2000/svg"
@@ -36,7 +58,7 @@ export default function DangerZone() {
             </button>
           </div>
         </div>
-        <div className="flex flex-col justify-between gap-4 border-b border-gray-200 py-4 first:pt-0 last:border-b-0 last:pb-0 sm:flex-row sm:items-end dark:border-gray-800">
+        {/* <div className="flex flex-col justify-between gap-4 border-b border-gray-200 py-4 first:pt-0 last:border-b-0 last:pb-0 sm:flex-row sm:items-end dark:border-gray-800">
           <div>
             <span className="mb-1 block text-base font-medium text-gray-800 dark:text-white/90">
               Delete account
@@ -66,7 +88,7 @@ export default function DangerZone() {
               Delete account
             </button>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );
